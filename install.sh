@@ -131,6 +131,14 @@ download_if_exists "$RAW_URL/AGENTS.md" "$TARGET_DIR/.imagefront/AGENTS.md"
 download_if_exists "$RAW_URL/UI_ONLY_ITERATIONS.md" "$TARGET_DIR/.imagefront/UI_ONLY_ITERATIONS.md"
 download_if_exists "$RAW_URL/FRAMEWORK_SPEC.md" "$TARGET_DIR/.imagefront/FRAMEWORK_SPEC.md"
 
+# Download Python scripts and templates
+download_if_exists "$RAW_URL/scripts/generate-ui-image.py" "$TARGET_DIR/.imagefront/scripts/generate-ui-image.py"
+download_if_exists "$RAW_URL/requirements.txt" "$TARGET_DIR/requirements.txt"
+download_if_exists "$RAW_URL/.env.template" "$TARGET_DIR/.env.template"
+
+# Make Python script executable
+chmod +x "$TARGET_DIR/.imagefront/scripts/generate-ui-image.py" 2>/dev/null || true
+
 # Create placeholder schemas if downloads failed (repo not pushed yet)
 if [ ! -f "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" ]; then
   cat > "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" <<'EOF'
@@ -265,12 +273,14 @@ EOF
 # Create .gitignore additions
 if [ -f "$TARGET_DIR/.gitignore" ]; then
   echo "" >> "$TARGET_DIR/.gitignore"
-  echo "# Imagefront temporary files" >> "$TARGET_DIR/.gitignore"
+  echo "# Imagefront" >> "$TARGET_DIR/.gitignore"
+  echo ".env" >> "$TARGET_DIR/.gitignore"
   echo ".imagefront/*.log" >> "$TARGET_DIR/.gitignore"
   echo ".imagefront/temp/" >> "$TARGET_DIR/.gitignore"
 else
   cat > "$TARGET_DIR/.gitignore" <<'EOF'
-# Imagefront temporary files
+# Imagefront
+.env
 .imagefront/*.log
 .imagefront/temp/
 EOF
@@ -282,26 +292,46 @@ cat > "$TARGET_DIR/IMAGEFRONT.md" <<EOF
 
 This project uses the Imagefront framework for UI-first development.
 
+## Initial Setup (Required)
+
+1. **Install Python dependencies:**
+   \`\`\`bash
+   pip install -r requirements.txt
+   \`\`\`
+
+2. **Configure API keys:**
+   \`\`\`bash
+   cp .env.template .env
+   # Edit .env and add your OPENAI_API_KEY
+   \`\`\`
+
 ## Quick Start
 
-### 1. Generate UI Screens
+### Option 1: Direct Python Script
 
-Ask Claude Code:
-\`\`\`
-"Generate a login screen in $STYLE style"
-\`\`\`
-
-### 2. Annotate Elements
-
-\`\`\`
-"Annotate all elements in login-screen"
+Generate UI with the Python script:
+\`\`\`bash
+python .imagefront/scripts/generate-ui-image.py login-screen "A modern login screen with email and password"
 \`\`\`
 
-### 3. Create Component Manifest
+### Option 2: Via Claude Code
 
-\`\`\`
-"Create component manifest for login-screen using $FRAMEWORK"
-\`\`\`
+Ask Claude Code to:
+
+1. **Generate UI:**
+   \`\`\`
+   "Run the generate-ui-image.py script to create a login screen in $STYLE style"
+   \`\`\`
+
+2. **Annotate Elements:**
+   \`\`\`
+   "Annotate all elements in login-screen"
+   \`\`\`
+
+3. **Create Component Manifest:**
+   \`\`\`
+   "Create component manifest for login-screen using $FRAMEWORK"
+   \`\`\`
 
 ### 4. Approve
 

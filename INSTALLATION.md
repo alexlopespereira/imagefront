@@ -1,343 +1,258 @@
-# Imagefront Installation Guide
+# Imagefront Framework - Installation Guide
 
-Imagefront can be installed in your project using simple commands.
+Complete guide for installing and configuring the Imagefront framework.
 
 ---
 
-## Quick Install (Recommended)
+## Prerequisites
 
-### Option 1: Using `uvx` 
+- **Bash** (Linux/macOS) or **PowerShell** (Windows)
+- **Python 3.8+** (for image generation scripts)
+- **Git** (optional, for version control)
+- **OpenAI API Key** (for DALL-E 3 image generation)
+
+---
+
+## Installation
+
+### Linux/macOS (Bash)
 
 ```bash
-# Install in a new project directory
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init my-app
-
 # Install in current directory
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init .
-
-# Or use --here flag
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init --here
-```
-
-### Option 2: Using Bash Script
-
-```bash
-# Download and run install script
-curl -fsSL https://raw.githubusercontent.com/seu-usuario/imagefront/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash
 
 # Or with options
-curl -fsSL https://raw.githubusercontent.com/seu-usuario/imagefront/main/install.sh | bash -s -- --framework react --style shadcn/ui
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- \
+  --framework react \
+  --style "shadcn/ui" \
+  --backend dotnet
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Install in current directory
+iwr -useb https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 | iex
+
+# Or with options
+.\install.ps1 -Framework react -Style "shadcn/ui" -Backend dotnet
+```
+
+### Installation Options
+
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `--framework` / `-Framework` | react, vue, angular, svelte, solid, agnostic | react | Frontend framework |
+| `--style` / `-Style` | shadcn/ui, material, fluent, ant-design, chakra | shadcn/ui | UI style reference |
+| `--backend` / `-Backend` | dotnet, node, python, java, agnostic | agnostic | Backend framework |
+| `--dir` / `-TargetDir` | path | current directory | Installation directory |
+| `--force` / `-Force` | flag | false | Skip confirmation prompts |
+
+---
+
+## Post-Installation Setup
+
+### 1. Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs:
+- `openai` - For DALL-E 3 image generation and GPT-4V annotation
+- `python-dotenv` - For environment variable management
+- `requests`, `Pillow` - For image processing
+- `replicate` (optional) - For Stable Diffusion/Flux models
+
+### 2. Configure API Keys
+
+```bash
+# Copy template
+cp .env.template .env
+
+# Edit .env file
+nano .env  # or your preferred editor
+```
+
+Add your API key:
+```env
+OPENAI_API_KEY=sk-your-actual-key-here
+```
+
+**Getting an OpenAI API Key:**
+1. Go to https://platform.openai.com/api-keys
+2. Create a new API key
+3. Copy and paste into `.env` file
+
+**Important:** Never commit `.env` to git (it's already in `.gitignore`)
+
+### 3. Verify Installation
+
+```bash
+# Check directory structure
+ls -la .imagefront/
+
+# Test Python script
+python .imagefront/scripts/generate-ui-image.py --help
 ```
 
 ---
 
-## Installation Options
+## Quick Start
 
-### Framework Selection
+### Generate Your First UI Screen
 
 ```bash
-# React (default)
-imagefront init . --framework react
-
-# Vue.js
-imagefront init . --framework vue
-
-# Angular
-imagefront init . --framework angular
-
-# Svelte
-imagefront init . --framework svelte
-
-# Framework-agnostic
-imagefront init . --framework agnostic
+python .imagefront/scripts/generate-ui-image.py \
+  login-screen \
+  "A modern login screen with email and password fields, a login button, and a forgot password link"
 ```
 
-### UI Style Reference
+This will:
+- Generate a UI image using DALL-E 3
+- Save to `ui_specs/login-screen/versions/YYYY-MM-DD-v1.png`
+- Create metadata file `ui_specs/login-screen/metadata.json`
 
-```bash
-# shadcn/ui (default)
-imagefront init . --style shadcn/ui
+### Using Claude Code
 
-# Material Design
-imagefront init . --style material
+Ask Claude Code to run the script:
 
-# Ant Design
-imagefront init . --style ant-design
-
-# Chakra UI
-imagefront init . --style chakra
-
-# Custom
-imagefront init . --style custom
 ```
+You: "Run generate-ui-image.py to create a dashboard screen with charts and tables"
 
-### Backend Framework
-
-```bash
-# .NET
-imagefront init . --backend dotnet
-
-# Node.js
-imagefront init . --backend node
-
-# Python
-imagefront init . --backend python
-
-# Framework-agnostic (default)
-imagefront init . --backend agnostic
+Claude: [Executes the Python script]
+        ✅ UI mockup generated!
+        → ui_specs/dashboard/versions/2026-01-11-v1.png
 ```
 
 ---
 
-## What Gets Installed
-
-After running `imagefront init`, your project will have:
+## Directory Structure After Installation
 
 ```
 your-project/
 ├── .imagefront/              # Framework configuration
-│   ├── config.json          # Your configuration
-│   ├── schemas/             # JSON schemas for validation
-│   │   ├── annotation.schema.json
-│   │   ├── component-manifest.schema.json
-│   │   ├── approval.schema.json
-│   │   ├── contract.schema.json
-│   │   ├── trace.schema.json
-│   │   └── assertion.schema.json
-│   ├── templates/           # Templates for artifacts
-│   │   ├── config.template.json
-│   │   ├── screen-metadata.json
-│   │   ├── approval-template.json
-│   │   ├── contracts-template.md
-│   │   └── scenario-metadata.json
-│   ├── prompts/             # AI prompt templates
-│   │   ├── generate-ui.md
-│   │   ├── annotate-ui.md
-│   │   ├── create-component-manifest.md
-│   │   ├── draft-contracts.md
-│   │   ├── scaffold-backend.md
-│   │   └── generate-ux-sequence.md
-│   └── scripts/             # Helper scripts
-│       ├── new-screen.sh
-│       └── validate-gate.sh
-├── ui_specs/                # UI specifications (created empty)
-├── ux_specs/                # UX flows (created empty)
-├── ui_approvals/            # Approval records (created empty)
-├── ux_approvals/            # UX approvals (created empty)
-├── backend_specs/           # Backend contracts (created empty)
-│   ├── contracts/
-│   └── scaffolds/
-├── IMAGEFRONT.md            # Quick reference guide
-└── .gitignore               # Updated with Imagefront entries
+│   ├── schemas/             # JSON validation schemas
+│   ├── scripts/             # Python helper scripts
+│   │   └── generate-ui-image.py
+│   ├── AGENTS.md            # AI agent integration guide
+│   ├── UI_ONLY_ITERATIONS.md
+│   └── FRAMEWORK_SPEC.md
+├── ui_specs/                # UI screen specifications
+├── ux_specs/                # UX flow specifications
+├── ui_approvals/            # Approval records
+├── ux_approvals/            # UX approval records
+├── backend_specs/           # Backend contracts
+├── requirements.txt         # Python dependencies
+├── .env.template           # API key template
+├── .env                    # Your API keys (git-ignored)
+└── IMAGEFRONT.md           # Quick reference guide
 ```
 
 ---
 
-## Post-Installation
+## Alternative Image Generation Models
 
-### 1. Review Configuration
+### Using Replicate (Stable Diffusion/Flux)
 
 ```bash
-cat .imagefront/config.json
+# Install Replicate
+pip install replicate
+
+# Add to .env
+REPLICATE_API_TOKEN=your-replicate-token
+
+# Generate with Flux
+python .imagefront/scripts/generate-ui-image.py \
+  dashboard \
+  "Admin dashboard with charts" \
+  --model flux
 ```
 
-Customize as needed:
-- AI provider API keys (use environment variables)
-- UI dimensions
-- Gate rules
-- Directory paths
-
-### 2. Add to Claude Code Context
-
-Add reference to `IMAGEFRONT.md` in your `CLAUDE.md`:
-
-```markdown
-# CLAUDE.md
-
-## Project Setup
-
-This project uses Imagefront framework for UI-first development.
-
-See [IMAGEFRONT.md](IMAGEFRONT.md) for workflow and commands.
-```
-
-### 3. Create Your First Screen
+### Using Stability AI
 
 ```bash
-# Using helper script
-./.imagefront/scripts/new-screen.sh login-screen
+# Add to .env
+STABILITY_API_KEY=your-stability-key
 
-# Or ask Claude directly
-"Create a login screen"
+# Generate with Stable Diffusion
+python .imagefront/scripts/generate-ui-image.py \
+  profile \
+  "User profile page" \
+  --model stable-diffusion
 ```
-
----
-
-## Usage Workflow
-
-### Phase 1: Generate UI
-
-Ask Claude Code:
-```
-"Generate a login screen in shadcn/ui style"
-```
-
-Claude will:
-- Use the prompt template from `.imagefront/prompts/generate-ui.md`
-- Call DALL-E API to generate the image
-- Save to `ui_specs/login-screen/versions/YYYY-MM-DD-v1.png`
-- Create metadata
-
-### Phase 2: Annotate Elements
-
-```
-"Annotate all elements in login-screen"
-```
-
-Claude will:
-- Use GPT-4 Vision to analyze the image
-- Follow `.imagefront/prompts/annotate-ui.md`
-- Create structured JSON validated against `schemas/annotation.schema.json`
-- Generate human-readable `.map.md` file
-
-### Phase 3: Create Component Manifest
-
-```
-"Create component manifest for login-screen using React"
-```
-
-Claude will:
-- Read annotations
-- Follow `.imagefront/prompts/create-component-manifest.md`
-- Define components, props, state, events
-- Validate against `schemas/component-manifest.schema.json`
-
-### Phase 4: Approve
-
-```
-"Approve login-screen for requirement REQ-001"
-```
-
-Creates approval record in `ui_approvals/REQ-001/`.
-
-### Phase 5: Validate Gate
-
-```
-"Can we start the backend?"
-```
-
-Claude validates:
-- All screens have required artifacts
-- All approvals are frozen
-- Contracts are drafted
-
-### Phase 6: Draft Contracts
-
-```
-"Draft backend contracts from approved screens"
-```
-
-Generates `backend_specs/contracts.draft.md`.
-
----
-
-## Requirements
-
-### For Python Installation (uvx)
-- Python 3.8+
-- `uv` package manager
-
-### For Bash Installation
-- Bash 4.0+
-- `curl` or `wget`
-
-### For AI Features
-- OpenAI API key (for DALL-E and GPT-4V)
-- Or Anthropic API key (for Claude Vision)
-- Claude Code or similar AI coding assistant
-
----
-
-## Environment Variables
-
-Set these in your environment or `.env`:
-
-```bash
-# OpenAI (for DALL-E + GPT-4V)
-export OPENAI_API_KEY="sk-..."
-
-# Anthropic (for Claude Vision)
-export ANTHROPIC_API_KEY="sk-ant-..."
-
-# Midjourney (optional)
-export MIDJOURNEY_API_KEY="..."
-```
-
----
-
-## Updating Imagefront
-
-### Update schemas, templates, prompts:
-
-```bash
-# Re-run init with --force
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init . --force
-
-# Or manually download files
-curl -O https://raw.githubusercontent.com/seu-usuario/imagefront/main/.imagefront/schemas/annotation.schema.json
-```
-
----
-
-## Uninstalling
-
-To remove Imagefront from your project:
-
-```bash
-# Remove framework files
-rm -rf .imagefront
-
-# Remove generated directories (careful - this deletes your work!)
-# rm -rf ui_specs ux_specs ui_approvals ux_approvals backend_specs
-
-# Remove documentation
-rm IMAGEFRONT.md
-```
-
-**Note:** Keep `ui_specs/`, `ux_specs/`, etc. as they contain your actual work!
 
 ---
 
 ## Troubleshooting
 
-### Issue: `uvx` not found
+### Python not found
 
-**Solution:** Install `uv`:
+**Solution:** Install Python 3.8+
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# macOS
+brew install python3
+
+# Ubuntu/Debian
+sudo apt install python3 python3-pip
+
+# Windows
+# Download from https://python.org
 ```
 
-### Issue: Permission denied on scripts
+### OpenAI API Error: Invalid API Key
 
-**Solution:** Make scripts executable:
+**Solution:** Check your `.env` file
 ```bash
-chmod +x .imagefront/scripts/*.sh
+cat .env  # Should show OPENAI_API_KEY=sk-...
 ```
 
-### Issue: API keys not working
+### Permission denied: generate-ui-image.py
 
-**Solution:** Check environment variables:
+**Solution:** Make script executable
 ```bash
-echo $OPENAI_API_KEY
+chmod +x .imagefront/scripts/generate-ui-image.py
 ```
+
+### ModuleNotFoundError: No module named 'openai'
+
+**Solution:** Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Uninstallation
+
+To remove Imagefront from a project:
+
+```bash
+# Remove all Imagefront files
+rm -rf .imagefront/ ui_specs/ ux_specs/ ui_approvals/ ux_approvals/ backend_specs/
+rm IMAGEFRONT.md requirements.txt .env.template .env
+```
+
+Or keep generated UIs and specs:
+```bash
+# Remove only framework files
+rm -rf .imagefront/ IMAGEFRONT.md requirements.txt .env.template .env
+```
+
+---
+
+## Next Steps
+
+1. Read **[IMAGEFRONT.md](IMAGEFRONT.md)** - Quick reference in your project
+2. Read **[.imagefront/AGENTS.md](.imagefront/AGENTS.md)** - How Claude Code uses this framework
+3. Read **[.imagefront/UI_ONLY_ITERATIONS.md](.imagefront/UI_ONLY_ITERATIONS.md)** - UI-first workflow
+4. Generate your first screen with `generate-ui-image.py`
+5. Ask Claude Code to annotate and create manifests
 
 ---
 
 ## Support
 
-- **Documentation:** [GitHub README](https://github.com/seu-usuario/imagefront)
-- **Issues:** [GitHub Issues](https://github.com/seu-usuario/imagefront/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/seu-usuario/imagefront/discussions)
-
----
-
+- **Issues:** https://github.com/alexlopespereira/imagefront/issues
+- **Documentation:** https://github.com/alexlopespereira/imagefront
+- **OpenAI Help:** https://help.openai.com

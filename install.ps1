@@ -123,6 +123,11 @@ foreach ($doc in $docs) {
     Get-FileIfExists -Url $url -Output $output
 }
 
+# Download Python scripts and templates
+Get-FileIfExists -Url "$RAW_URL/scripts/generate-ui-image.py" -Output (Join-Path $TargetDir ".imagefront\scripts\generate-ui-image.py")
+Get-FileIfExists -Url "$RAW_URL/requirements.txt" -Output (Join-Path $TargetDir "requirements.txt")
+Get-FileIfExists -Url "$RAW_URL/.env.template" -Output (Join-Path $TargetDir ".env.template")
+
 # Create placeholder if download failed
 $annotationSchema = Join-Path $TargetDir ".imagefront\schemas\annotation.schema.json"
 if (-not (Test-Path $annotationSchema)) {
@@ -156,9 +161,17 @@ $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 $readme = "# Imagefront Framework Setup`n`n"
 $readme += "This project uses the Imagefront framework for UI-first development.`n`n"
 $readme += "## Configuration`n`n- Framework: $Framework`n- Style: $Style`n- Backend: $Backend`n- Installed: $timestamp`n`n"
+$readme += "## Initial Setup (Required)`n`n"
+$readme += "1. Install Python dependencies:`n"
+$readme += "   pip install -r requirements.txt`n`n"
+$readme += "2. Configure API keys:`n"
+$readme += "   cp .env.template .env`n"
+$readme += "   # Edit .env and add your OPENAI_API_KEY`n`n"
 $readme += "## Quick Start`n`n"
-$readme += "Ask Claude Code to:`n"
-$readme += "1. Generate a login screen in $Style style`n"
+$readme += "Generate UI with Python script:`n"
+$readme += "python .imagefront/scripts/generate-ui-image.py login-screen `"A modern login screen with email and password`"`n`n"
+$readme += "Or ask Claude Code to:`n"
+$readme += "1. Run the generate-ui-image.py script`n"
 $readme += "2. Annotate all elements`n"
 $readme += "3. Create component manifest`n"
 $readme += "4. Approve for implementation`n`n"

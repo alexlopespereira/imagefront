@@ -67,26 +67,42 @@ iwr https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.p
 
 📖 See **[INSTALLATION.md](INSTALLATION.md)** for complete installation guide.
 
+### Post-Installation Setup
+
+After installing the framework:
+
+```bash
+# 1. Install Python dependencies
+pip install -r requirements.txt
+
+# 2. Configure API keys
+cp .env.template .env
+# Edit .env and add your OPENAI_API_KEY
+
+# 3. Generate your first UI
+python .imagefront/scripts/generate-ui-image.py login-screen "A modern login screen"
+```
+
 ### Use with Claude Code
 
-After installation, interact naturally:
+After setup, ask Claude Code to help:
 
 ```
-You: "Generate a login screen in shadcn/ui style"
+You: "Run generate-ui-image.py to create a dashboard screen"
 
 Claude: ✅ UI screen generated!
-        → ui_specs/login-screen/versions/2026-01-10-v1.png
+        → ui_specs/dashboard/versions/2026-01-10-v1.png
 
-You: "Annotate all elements"
+You: "Annotate all elements in this screen"
 
 Claude: ✅ Annotations created!
-        → 8 elements identified
-        → API call: POST /auth/login
+        → 12 elements identified
+        → API calls: GET /api/stats, GET /api/users
 
 You: "Create component manifest using React"
 
 Claude: ✅ Manifest created!
-        → LoginForm component defined
+        → Dashboard component defined
         → Props, state, events specified
 ```
 
