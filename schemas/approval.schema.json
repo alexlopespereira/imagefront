@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://imagefront.dev/schemas/approval.schema.json",
+  "title": "UI Approval Record",
+  "description": "Schema for UI approval tracking - records who approved what, when, and with what evidence",
+  "type": "object",
+  "required": ["reqId", "screenId", "version", "status", "approver", "createdAt"],
+  "properties": {
+    "reqId": {
+      "type": "string",
+      "pattern": "^REQ-[0-9]{3,}",
+      "description": "Requirement ID this approval is for",
+      "examples": ["REQ-001", "REQ-042", "REQ-123-login"]
+    },
+    "screenId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Screen identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v\\d+$",
+      "description": "Approved screen version"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected", "frozen"],
+      "description": "Approval status"
+    },
+    "approver": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Approver's name"
+        },
+        "role": {
+          "type": "string",
+          "description": "Approver's role",
+          "examples": ["Product Owner", "Designer", "Tech Lead"]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Unique user ID in system"
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When approval record was created"
+    },
+    "approvedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When status changed to approved"
+    },
+    "frozenAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When status changed to frozen (ready for implementation)"
+    },
+    "rejectedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "comments": {
+      "type": "string",
+      "description": "Approval comments or feedback"
+    },
+    "rejectionReason": {
+      "type": "string",
+      "description": "Reason for rejection (if status is rejected)"
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Evidence links for this approval",
+      "properties": {
+        "annotationIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^UI-[0-9]{3,}$"
+          },
+          "description": "Annotation IDs that provide evidence for this approval"
+        },
+        "manifestVersion": {
+          "type": "string",
+          "pattern": "^v\\d+$"
+        },
+        "imageVersion": {
+          "type": "string",
+          "pattern": "^v\\d+$"
+        },
+        "imageFile": {
+          "type": "string",
+          "description": "Path to approved UI image"
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Conditions or requirements for approval"
+    },
+    "linkedRequirements": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Related requirement IDs"
+    },
+    "changeHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "status", "by"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "approved", "rejected", "frozen"]
+          },
+          "by": {
+            "type": "string",
+            "description": "Who made this status change"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Audit trail of status changes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Tags for categorization",
+      "examples": ["critical", "MVP", "phase-1"]
+    }
+  }
+}

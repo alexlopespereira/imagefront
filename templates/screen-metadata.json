@@ -1,0 +1,48 @@
+{
+  "screenId": "example-screen",
+  "name": "Example Screen",
+  "description": "Detailed description of what this screen does",
+  "createdAt": "2026-01-10T10:00:00Z",
+  "updatedAt": "2026-01-10T10:00:00Z",
+  "currentVersion": "v1",
+
+  "versions": [
+    {
+      "version": "v1",
+      "createdAt": "2026-01-10T10:00:00Z",
+      "imageFile": "ui_specs/example-screen/versions/2026-01-10-v1.png",
+      "annotationFile": "ui_specs/example-screen/versions/2026-01-10-v1.json",
+      "manifestFile": "ui_specs/example-screen/components/v1.json",
+      "changes": "Initial version"
+    }
+  ],
+
+  "linkedRequirements": [
+    "REQ-001",
+    "REQ-002"
+  ],
+
+  "route": {
+    "path": "/example",
+    "params": [],
+    "guards": ["authGuard"]
+  },
+
+  "tags": [
+    "authentication",
+    "MVP",
+    "phase-1"
+  ],
+
+  "status": "draft",
+  "_statusOptions": ["draft", "in-review", "approved", "frozen", "implemented"],
+
+  "approvals": [
+    {
+      "reqId": "REQ-001",
+      "version": "v1",
+      "status": "approved",
+      "approvalFile": "ui_approvals/REQ-001/example-screen.approval.json"
+    }
+  ]
+}

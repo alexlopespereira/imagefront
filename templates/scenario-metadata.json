@@ -1,0 +1,55 @@
+{
+  "scenarioId": "example-flow",
+  "name": "Example User Flow",
+  "description": "Detailed description of this user flow scenario",
+  "createdAt": "2026-01-10T10:00:00Z",
+  "updatedAt": "2026-01-10T10:00:00Z",
+  "currentVersion": "v1",
+
+  "versions": [
+    {
+      "version": "v1",
+      "createdAt": "2026-01-10T10:00:00Z",
+      "videoFile": "ux_specs/example-flow/versions/2026-01-10-v1.mp4",
+      "traceFile": "ux_specs/example-flow/traces/v1.trace.yml",
+      "assertionFile": "ux_specs/example-flow/traces/v1.assert.yml",
+      "changes": "Initial version"
+    }
+  ],
+
+  "screens": [
+    "screen-1",
+    "screen-2",
+    "screen-3"
+  ],
+
+  "linkedRequirements": [
+    "AC-001",
+    "AC-002"
+  ],
+
+  "tags": [
+    "critical-path",
+    "MVP",
+    "e2e-test"
+  ],
+
+  "status": "draft",
+  "_statusOptions": ["draft", "in-review", "approved", "frozen", "automated"],
+
+  "approvals": [
+    {
+      "reqId": "AC-001",
+      "version": "v1",
+      "status": "approved",
+      "approvalFile": "ux_approvals/AC-001/example-flow.approval.json"
+    }
+  ],
+
+  "testAutomation": {
+    "framework": "playwright",
+    "_otherOptions": ["cypress", "selenium", "puppeteer"],
+    "testFile": "tests/e2e/example-flow.spec.ts",
+    "status": "not-automated"
+  }
+}

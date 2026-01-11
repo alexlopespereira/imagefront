@@ -1,0 +1,49 @@
+{
+  "reqId": "REQ-XXX",
+  "screenId": "screen-name",
+  "version": "v1",
+  "status": "pending",
+
+  "approver": {
+    "name": "Approver Name",
+    "role": "Product Owner",
+    "email": "approver@example.com",
+    "userId": "user-id-123"
+  },
+
+  "createdAt": "2026-01-10T10:00:00Z",
+  "approvedAt": null,
+  "frozenAt": null,
+  "rejectedAt": null,
+
+  "comments": "",
+  "rejectionReason": "",
+
+  "evidence": {
+    "annotationIds": [
+      "UI-001",
+      "UI-002",
+      "UI-003"
+    ],
+    "manifestVersion": "v1",
+    "imageVersion": "v1",
+    "imageFile": "ui_specs/screen-name/versions/2026-01-10-v1.png"
+  },
+
+  "conditions": [],
+
+  "linkedRequirements": [
+    "REQ-XXX"
+  ],
+
+  "changeHistory": [
+    {
+      "timestamp": "2026-01-10T10:00:00Z",
+      "status": "pending",
+      "by": "System",
+      "note": "Approval record created"
+    }
+  ],
+
+  "tags": []
+}

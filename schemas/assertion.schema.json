@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://imagefront.dev/schemas/assertion.schema.json",
+  "title": "UX Assertions",
+  "description": "Schema for UX flow assertions - defines validation rules for golden traces",
+  "type": "object",
+  "required": ["scenarioId", "version", "assertions"],
+  "properties": {
+    "scenarioId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^v\\d+$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "condition"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ASSERT-[0-9]{3,}$",
+            "description": "Unique assertion ID",
+            "examples": ["ASSERT-001", "ASSERT-042"]
+          },
+          "stepId": {
+            "type": "number",
+            "description": "Step ID from golden trace this assertion validates"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "element_visible",
+              "element_enabled",
+              "element_disabled",
+              "text_content",
+              "input_value",
+              "api_response",
+              "navigation",
+              "timing",
+              "custom"
+            ],
+            "description": "Type of assertion"
+          },
+          "condition": {
+            "type": "string",
+            "description": "Human-readable condition being asserted"
+          },
+          "expected": {
+            "description": "Expected value (type varies by assertion type)"
+          },
+          "actual": {
+            "description": "Actual value (populated during test execution)"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["blocker", "critical", "major", "minor"],
+            "description": "Severity if assertion fails"
+          },
+          "timeout": {
+            "type": "number",
+            "description": "Max milliseconds to wait for condition to be true"
+          },
+          "description": {
+            "type": "string"
+          },
+          "xpath": {
+            "type": "string",
+            "description": "XPath selector (for element assertions)"
+          },
+          "selector": {
+            "type": "string",
+            "description": "CSS selector (for element assertions)"
+          }
+        }
+      }
+    }
+  }
+}

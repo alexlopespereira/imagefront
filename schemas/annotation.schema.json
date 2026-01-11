@@ -1,0 +1,411 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://imagefront.dev/schemas/annotation.schema.json",
+  "title": "UI Annotation",
+  "description": "Schema for UI screen annotations - identifies elements, bounds, data bindings, and interactions",
+  "type": "object",
+  "required": ["version", "screenId", "createdAt", "annotations"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^v\\d+$",
+      "description": "Version identifier (e.g., v1, v2, v3)",
+      "examples": ["v1", "v2", "v10"]
+    },
+    "screenId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Unique screen identifier in kebab-case",
+      "examples": ["login-screen", "user-dashboard", "settings-page"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this annotation was created"
+    },
+    "imageFile": {
+      "type": "string",
+      "description": "Relative path to the UI image file",
+      "examples": ["ui_specs/login-screen/versions/2026-01-10-v1.png"]
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Image width in pixels"
+        },
+        "height": {
+          "type": "number",
+          "minimum": 1,
+          "description": "Image height in pixels"
+        }
+      },
+      "description": "Dimensions of the annotated UI image"
+    },
+    "annotations": {
+      "type": "array",
+      "minItems": 1,
+      "description": "List of annotated UI elements",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "bounds", "label"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^UI-[0-9]{3,}$",
+            "description": "Unique annotation ID within this screen (e.g., UI-001, UI-002)",
+            "examples": ["UI-001", "UI-042", "UI-123"]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "button",
+              "input",
+              "textarea",
+              "select",
+              "checkbox",
+              "radio",
+              "text",
+              "heading",
+              "image",
+              "link",
+              "container",
+              "card",
+              "modal",
+              "dropdown",
+              "tooltip",
+              "icon",
+              "badge",
+              "table",
+              "list",
+              "navigation",
+              "other"
+            ],
+            "description": "Type of UI element"
+          },
+          "bounds": {
+            "type": "object",
+            "required": ["x", "y", "width", "height"],
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 0,
+                "description": "X coordinate of top-left corner (pixels)"
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Y coordinate of top-left corner (pixels)"
+              },
+              "width": {
+                "type": "number",
+                "minimum": 1,
+                "description": "Width of element (pixels)"
+              },
+              "height": {
+                "type": "number",
+                "minimum": 1,
+                "description": "Height of element (pixels)"
+              }
+            },
+            "description": "Bounding box of the element"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Human-readable label or text content of the element",
+            "examples": ["Email address", "Submit", "User profile"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the element's purpose"
+          },
+          "componentName": {
+            "type": "string",
+            "description": "Suggested component name for implementation (e.g., Button, Input)",
+            "examples": ["Button", "EmailInput", "LoginForm"]
+          },
+          "placeholder": {
+            "type": "string",
+            "description": "Placeholder text (for inputs)"
+          },
+          "value": {
+            "type": "string",
+            "description": "Default or example value shown in the UI"
+          },
+          "interactions": {
+            "type": "array",
+            "description": "User interactions supported by this element",
+            "items": {
+              "type": "object",
+              "required": ["event", "action"],
+              "properties": {
+                "event": {
+                  "type": "string",
+                  "enum": [
+                    "onClick",
+                    "onChange",
+                    "onSubmit",
+                    "onFocus",
+                    "onBlur",
+                    "onHover",
+                    "onKeyPress",
+                    "onScroll",
+                    "onLoad"
+                  ],
+                  "description": "Event type"
+                },
+                "action": {
+                  "type": "string",
+                  "description": "What happens when event triggers",
+                  "examples": [
+                    "navigate to /dashboard",
+                    "submit form",
+                    "show validation error",
+                    "API call POST /auth/login"
+                  ]
+                },
+                "target": {
+                  "type": "string",
+                  "description": "Target of the action (URL, element ID, API endpoint)"
+                }
+              }
+            }
+          },
+          "dataBinding": {
+            "type": "object",
+            "description": "Data binding information for this element",
+            "properties": {
+              "field": {
+                "type": "string",
+                "description": "Name of the data field this element binds to",
+                "examples": ["email", "password", "user.name"]
+              },
+              "dataType": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "date",
+                  "email",
+                  "url",
+                  "phone",
+                  "object",
+                  "array"
+                ],
+                "description": "Expected data type"
+              },
+              "required": {
+                "type": "boolean",
+                "description": "Whether this field is required"
+              },
+              "validation": {
+                "type": "array",
+                "description": "Validation rules for this field",
+                "items": {
+                  "type": "string",
+                  "examples": [
+                    "email format",
+                    "min 8 characters",
+                    "must contain number",
+                    "unique email"
+                  ]
+                }
+              },
+              "defaultValue": {
+                "description": "Default value for this field"
+              }
+            }
+          },
+          "accessibility": {
+            "type": "object",
+            "description": "Accessibility attributes",
+            "properties": {
+              "ariaLabel": {
+                "type": "string",
+                "description": "ARIA label for screen readers"
+              },
+              "role": {
+                "type": "string",
+                "description": "ARIA role",
+                "examples": ["button", "navigation", "dialog", "alert"]
+              },
+              "tabIndex": {
+                "type": "integer",
+                "description": "Tab order index"
+              },
+              "alt": {
+                "type": "string",
+                "description": "Alt text for images"
+              }
+            }
+          },
+          "styling": {
+            "type": "object",
+            "description": "Visual styling notes",
+            "properties": {
+              "variant": {
+                "type": "string",
+                "description": "Style variant (e.g., primary, secondary, outline)",
+                "examples": ["primary", "secondary", "outline", "ghost"]
+              },
+              "size": {
+                "type": "string",
+                "enum": ["xs", "sm", "md", "lg", "xl"],
+                "description": "Size variant"
+              },
+              "color": {
+                "type": "string",
+                "description": "Color scheme or hex code"
+              },
+              "classes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "CSS classes or utility classes (e.g., Tailwind)"
+              }
+            }
+          },
+          "state": {
+            "type": "object",
+            "description": "Current state of the element in the UI mockup",
+            "properties": {
+              "visible": {
+                "type": "boolean",
+                "description": "Whether element is visible"
+              },
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether element is enabled/interactive"
+              },
+              "selected": {
+                "type": "boolean",
+                "description": "Whether element is selected"
+              },
+              "loading": {
+                "type": "boolean",
+                "description": "Whether element is in loading state"
+              },
+              "error": {
+                "type": "boolean",
+                "description": "Whether element is showing error state"
+              }
+            }
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^UI-[0-9]{3,}$"
+            },
+            "description": "IDs of child elements (for containers)"
+          },
+          "parent": {
+            "type": "string",
+            "pattern": "^UI-[0-9]{3,}$",
+            "description": "ID of parent element"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Additional notes or comments about this element"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata about the annotation process",
+      "properties": {
+        "annotator": {
+          "type": "string",
+          "description": "Name or ID of person/agent who created annotations"
+        },
+        "aiAssisted": {
+          "type": "boolean",
+          "description": "Whether annotations were AI-assisted (e.g., GPT-4V, Claude Vision)"
+        },
+        "toolVersion": {
+          "type": "string",
+          "description": "Version of annotation tool or AI model used"
+        },
+        "confidenceScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Overall confidence score for AI-generated annotations (0-1)"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "version": "v1",
+      "screenId": "login-screen",
+      "createdAt": "2026-01-10T14:30:00Z",
+      "imageFile": "ui_specs/login-screen/versions/2026-01-10-v1.png",
+      "dimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotations": [
+        {
+          "id": "UI-001",
+          "type": "input",
+          "bounds": {
+            "x": 100,
+            "y": 150,
+            "width": 300,
+            "height": 40
+          },
+          "label": "Email address",
+          "componentName": "Input",
+          "placeholder": "Enter your email",
+          "dataBinding": {
+            "field": "email",
+            "dataType": "email",
+            "required": true,
+            "validation": ["email format", "required"]
+          },
+          "accessibility": {
+            "ariaLabel": "Email input field",
+            "role": "textbox"
+          }
+        },
+        {
+          "id": "UI-002",
+          "type": "button",
+          "bounds": {
+            "x": 100,
+            "y": 270,
+            "width": 300,
+            "height": 40
+          },
+          "label": "Sign In",
+          "componentName": "Button",
+          "interactions": [
+            {
+              "event": "onClick",
+              "action": "submit login form",
+              "target": "POST /auth/login"
+            }
+          ],
+          "styling": {
+            "variant": "primary",
+            "size": "lg"
+          }
+        }
+      ],
+      "metadata": {
+        "annotator": "Claude Code",
+        "aiAssisted": true,
+        "toolVersion": "GPT-4V",
+        "confidenceScore": 0.95
+      }
+    }
+  ]
+}

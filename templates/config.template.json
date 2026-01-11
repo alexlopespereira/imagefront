@@ -1,0 +1,124 @@
+{
+  "_comment": "Imagefront Framework Configuration Template",
+  "_description": "Copy this file to your project as .imagefront/config.json and customize",
+
+  "project": {
+    "name": "my-app",
+    "description": "My application description",
+    "version": "1.0.0"
+  },
+
+  "aiProviders": {
+    "_comment": "Configure AI providers for image/video generation and annotation",
+    "imageGeneration": {
+      "primary": "dall-e-3",
+      "fallback": "stable-diffusion",
+      "dalle": {
+        "apiKey": "${OPENAI_API_KEY}",
+        "model": "dall-e-3",
+        "quality": "hd",
+        "size": "1792x1024",
+        "style": "vivid"
+      },
+      "midjourney": {
+        "enabled": false,
+        "mode": "manual",
+        "_note": "Midjourney requires manual Discord bot interaction"
+      },
+      "stableDiffusion": {
+        "apiKey": "${REPLICATE_API_KEY}",
+        "model": "stability-ai/sdxl"
+      }
+    },
+    "annotation": {
+      "provider": "gpt-4-vision",
+      "apiKey": "${OPENAI_API_KEY}",
+      "model": "gpt-4-vision-preview",
+      "confidenceThreshold": 0.8,
+      "_note": "Auto-annotation confidence threshold (0-1)"
+    },
+    "videoGeneration": {
+      "enabled": false,
+      "provider": "runway",
+      "apiKey": "${RUNWAY_API_KEY}"
+    }
+  },
+
+  "uiStyle": {
+    "reference": "shadcn/ui",
+    "_otherOptions": ["material-ui", "ant-design", "chakra-ui", "custom"],
+    "colorScheme": "light",
+    "dimensions": {
+      "width": 1920,
+      "height": 1080
+    }
+  },
+
+  "frontend": {
+    "framework": "react",
+    "_otherOptions": ["vue", "angular", "svelte", "solid", "agnostic"],
+    "typescript": true,
+    "componentLibrary": "shadcn/ui"
+  },
+
+  "backend": {
+    "framework": "dotnet",
+    "_otherOptions": ["node-express", "fastapi", "spring-boot", "agnostic"],
+    "language": "csharp",
+    "apiStyle": "REST"
+  },
+
+  "gates": {
+    "uiFreeze": {
+      "enabled": true,
+      "strictMode": true,
+      "requiredArtifacts": [
+        "ui-image",
+        "annotations",
+        "component-manifest",
+        "approval"
+      ],
+      "blockBackendWithoutFreeze": true
+    }
+  },
+
+  "validation": {
+    "validateOnSave": true,
+    "autoFix": false,
+    "schemas": {
+      "annotation": "schemas/annotation.schema.json",
+      "manifest": "schemas/component-manifest.schema.json",
+      "approval": "schemas/approval.schema.json",
+      "contract": "schemas/contract.schema.json",
+      "trace": "schemas/trace.schema.json",
+      "assertion": "schemas/assertion.schema.json"
+    }
+  },
+
+  "git": {
+    "autoCommit": false,
+    "commitMessageTemplate": "feat(ui): {screenId} {version}",
+    "branchPrefix": "ui/",
+    "requireApprovalBeforeMerge": true
+  },
+
+  "directories": {
+    "uiSpecs": "ui_specs",
+    "uxSpecs": "ux_specs",
+    "uiApprovals": "ui_approvals",
+    "uxApprovals": "ux_approvals",
+    "backendSpecs": "backend_specs",
+    "schemas": ".imagefront/schemas",
+    "templates": ".imagefront/templates",
+    "prompts": ".imagefront/prompts"
+  },
+
+  "naming": {
+    "screenIdFormat": "kebab-case",
+    "versionFormat": "v{number}",
+    "dateFormat": "YYYY-MM-DD",
+    "annotationIdPrefix": "UI-",
+    "assertionIdPrefix": "ASSERT-",
+    "requirementIdPrefix": "REQ-"
+  }
+}
