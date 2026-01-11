@@ -6,7 +6,8 @@
 set -e
 
 VERSION="1.0.0"
-REPO_URL="https://github.com/seu-usuario/imagefront"
+REPO_URL="https://github.com/alexlopespereira/imagefront"
+RAW_URL="https://raw.githubusercontent.com/alexlopespereira/imagefront/main"
 
 # Colors for output
 RED='\033[0;31m'
@@ -108,60 +109,34 @@ mkdir -p "$TARGET_DIR/backend_specs/scaffolds"
 echo -e "${GREEN}✓ Directories created${NC}"
 
 # Download schemas
-echo -e "${BLUE}📥 Downloading schemas...${NC}"
+echo -e "${BLUE}📥 Downloading framework files...${NC}"
 
-# In a real implementation, these would download from the repo
-# For now, we'll create placeholder files
+# Download schemas from repository (silently fail if repo not pushed yet)
+download_if_exists() {
+  local url=$1
+  local output=$2
+  curl -fsSL "$url" -o "$output" 2>/dev/null || true
+}
 
-cat > "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" <<'EOF'
+download_if_exists "$RAW_URL/schemas/annotation.schema.json" "$TARGET_DIR/.imagefront/schemas/annotation.schema.json"
+download_if_exists "$RAW_URL/schemas/component-manifest.schema.json" "$TARGET_DIR/.imagefront/schemas/component-manifest.schema.json"
+download_if_exists "$RAW_URL/schemas/approval.schema.json" "$TARGET_DIR/.imagefront/schemas/approval.schema.json"
+download_if_exists "$RAW_URL/schemas/contract.schema.json" "$TARGET_DIR/.imagefront/schemas/contract.schema.json"
+download_if_exists "$RAW_URL/schemas/trace.schema.json" "$TARGET_DIR/.imagefront/schemas/trace.schema.json"
+download_if_exists "$RAW_URL/schemas/assertion.schema.json" "$TARGET_DIR/.imagefront/schemas/assertion.schema.json"
+
+# Create placeholder schemas if downloads failed (repo not pushed yet)
+if [ ! -f "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" ]; then
+  cat > "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" <<'EOF'
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "UI Annotation",
-  "description": "Schema for UI annotations"
+  "description": "Schema for UI annotations - placeholder until repository is available"
 }
 EOF
+fi
 
-cat > "$TARGET_DIR/.imagefront/schemas/component-manifest.schema.json" <<'EOF'
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Component Manifest",
-  "description": "Schema for component manifests"
-}
-EOF
-
-cat > "$TARGET_DIR/.imagefront/schemas/approval.schema.json" <<'EOF'
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Approval Record",
-  "description": "Schema for approval records"
-}
-EOF
-
-cat > "$TARGET_DIR/.imagefront/schemas/contract.schema.json" <<'EOF'
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Backend Contract",
-  "description": "Schema for backend contracts"
-}
-EOF
-
-cat > "$TARGET_DIR/.imagefront/schemas/trace.schema.json" <<'EOF'
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Golden Trace",
-  "description": "Schema for golden traces"
-}
-EOF
-
-cat > "$TARGET_DIR/.imagefront/schemas/assertion.schema.json" <<'EOF'
-{
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Assertions",
-  "description": "Schema for assertions"
-}
-EOF
-
-echo -e "${GREEN}✓ Schemas installed${NC}"
+echo -e "${GREEN}✓ Framework files installed${NC}"
 
 # Create config file
 echo -e "${BLUE}⚙️  Creating configuration...${NC}"
@@ -278,7 +253,7 @@ Claude will use the prompts and schemas in this directory.
 ## Documentation
 
 See the main Imagefront repository for full documentation:
-https://github.com/seu-usuario/imagefront
+https://github.com/alexlopespereira/imagefront
 EOF
 
 # Create .gitignore additions
@@ -352,9 +327,9 @@ backend_specs/      # Backend contracts and scaffolds
 
 ## Documentation
 
-- [Framework Spec](https://github.com/seu-usuario/imagefront/blob/main/FRAMEWORK_SPEC.md)
-- [AI Agent Guide](https://github.com/seu-usuario/imagefront/blob/main/AGENTS.md)
-- [UI-Only Iterations](https://github.com/seu-usuario/imagefront/blob/main/UI_ONLY_ITERATIONS.md)
+- [Framework Spec](https://github.com/alexlopespereira/imagefront/blob/main/FRAMEWORK_SPEC.md)
+- [AI Agent Guide](https://github.com/alexlopespereira/imagefront/blob/main/AGENTS.md)
+- [UI-Only Iterations](https://github.com/alexlopespereira/imagefront/blob/main/UI_ONLY_ITERATIONS.md)
 
 ## Configuration
 

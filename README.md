@@ -18,30 +18,29 @@ Este repositório contém a **especificação completa do framework Imagefront**
 
 ## 🚀 Quick Start
 
-### Install with One Command (like Spec-Kit)
+### Install with One Command
 
 ```bash
-# Using uvx (recommended - similar to GitHub Spec-Kit)
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init my-app
+# Install in current directory (default: React + shadcn/ui)
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash
 
-# Or in current directory
-uvx --from git+https://github.com/seu-usuario/imagefront.git imagefront init .
-
-# Or using bash
-curl -fsSL https://raw.githubusercontent.com/seu-usuario/imagefront/main/install.sh | bash
+# Or download and run with options
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh --framework react --style "shadcn/ui" --backend agnostic
 ```
 
 ### Customize Installation
 
 ```bash
-# With React + shadcn/ui (default)
-imagefront init . --framework react --style shadcn/ui
-
 # With Vue + Material Design
-imagefront init . --framework vue --style material
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --framework vue --style material
 
 # With .NET backend
-imagefront init . --framework react --backend dotnet
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --framework react --backend dotnet
+
+# In a specific directory
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --dir my-app
 ```
 
 📖 See **[INSTALLATION.md](INSTALLATION.md)** for complete installation guide.

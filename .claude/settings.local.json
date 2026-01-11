@@ -10,7 +10,8 @@
       "Bash(antigravity chat --help:*)",
       "Bash(antigravity chat:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
