@@ -139,15 +139,21 @@ def generate_with_imagen(prompt, output_path, size='1792x1024'):
         # Parse size
         width, height = map(int, size.split('x'))
 
+        # Get configuration from environment or use defaults
+        model_name = os.getenv('IMAGEN_MODEL', 'imagen-3.0-generate-001')
+        aspect_ratio = os.getenv('IMAGEN_ASPECT_RATIO', '16:9' if width > height else '9:16')
+        safety_filter = os.getenv('IMAGEN_SAFETY_FILTER', 'block_few')
+        person_generation = os.getenv('IMAGEN_PERSON_GENERATION', 'allow_adult')
+
         # Use Imagen 3 model
-        model = genai.ImageGenerationModel("imagen-3.0-generate-001")
+        model = genai.ImageGenerationModel(model_name)
 
         result = model.generate_images(
             prompt=prompt,
             number_of_images=1,
-            aspect_ratio="16:9" if width > height else "9:16",
-            safety_filter_level="block_few",
-            person_generation="allow_adult"
+            aspect_ratio=aspect_ratio,
+            safety_filter_level=safety_filter,
+            person_generation=person_generation
         )
 
         # Save the image
