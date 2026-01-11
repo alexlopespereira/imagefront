@@ -169,7 +169,7 @@ Este framework é **independente de tecnologia**. Você pode implementar ferrame
 
 - **CLI:** Node.js (Commander.js), Python (Click), .NET (System.CommandLine)
 - **Validação:** AJV, jsonschema (Python), NJsonSchema (.NET)
-- **IA:** OpenAI (DALL-E, GPT-4V), Claude (Vision), Midjourney
+- **IA:** Google (Imagen/Nano Banana), Claude (Vision), Replicate (Flux, Stable Diffusion)
 
 Ver [reference-implementations/](reference-implementations/) para exemplos.
 

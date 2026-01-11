@@ -17,7 +17,7 @@ def main():
     parser.add_argument('screen_id', help='Screen ID (e.g., login-screen)')
     parser.add_argument('prompt', help='Description of the UI to generate')
     parser.add_argument('--style', default='shadcn/ui', help='UI style reference (default: shadcn/ui)')
-    parser.add_argument('--model', choices=['imagen', 'dall-e-3', 'stable-diffusion', 'flux'],
+    parser.add_argument('--model', choices=['imagen', 'flux', 'stable-diffusion'],
                        default='imagen', help='Image generation model (default: imagen - Google Imagen/Nano Banana)')
     parser.add_argument('--size', default='1792x1024', help='Image size (default: 1792x1024)')
     parser.add_argument('--output-dir', default='ui_specs', help='Output directory')
@@ -35,11 +35,12 @@ def main():
             print("Please create a .env file with your Google API key")
             print("Get your key at: https://aistudio.google.com/apikey")
             sys.exit(1)
-    elif args.model == 'dall-e-3':
-        api_key = os.getenv('OPENAI_API_KEY')
+    elif args.model in ['flux', 'stable-diffusion']:
+        api_key = os.getenv('REPLICATE_API_TOKEN')
         if not api_key:
-            print("[ERROR] OPENAI_API_KEY not found in .env file")
-            print("Please create a .env file with your OpenAI API key")
+            print("[ERROR] REPLICATE_API_TOKEN not found in .env file")
+            print("Please create a .env file with your Replicate API token")
+            print("Get your token at: https://replicate.com/account/api-tokens")
             sys.exit(1)
 
     # Setup paths
@@ -70,8 +71,6 @@ def main():
     # Generate image based on model
     if args.model == 'imagen':
         success = generate_with_imagen(enhanced_prompt, output_path, args.size)
-    elif args.model == 'dall-e-3':
-        success = generate_with_dalle(enhanced_prompt, output_path, args.size)
     elif args.model == 'stable-diffusion':
         success = generate_with_replicate(enhanced_prompt, output_path, 'stability-ai/sdxl')
     elif args.model == 'flux':
@@ -163,43 +162,6 @@ def generate_with_imagen(prompt, output_path, size='1792x1024'):
     except ImportError:
         print("[ERROR] google-generativeai package not installed")
         print("Install with: pip install google-generativeai")
-        return False
-    except Exception as e:
-        print(f"[ERROR] {e}")
-        return False
-
-def generate_with_dalle(prompt, output_path, size='1792x1024'):
-    """Generate image using DALL-E 3"""
-    try:
-        from openai import OpenAI
-
-        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
-        print("[...] Calling DALL-E 3 API...")
-
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=prompt,
-            size=size,
-            quality="hd",
-            n=1,
-        )
-
-        image_url = response.data[0].url
-
-        # Download image
-        import requests
-        print("[...] Downloading image...")
-        img_data = requests.get(image_url).content
-
-        with open(output_path, 'wb') as f:
-            f.write(img_data)
-
-        return True
-
-    except ImportError:
-        print("[ERROR] openai package not installed")
-        print("Install with: pip install openai")
         return False
     except Exception as e:
         print(f"[ERROR] {e}")

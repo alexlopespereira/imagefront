@@ -7,10 +7,7 @@ python-dotenv>=1.0.0
 # Google Generative AI (for Imagen/Nano Banana - PRIMARY)
 google-generativeai>=0.3.0
 
-# Alternative: OpenAI (for DALL-E 3 and GPT-4V)
-openai>=1.0.0
-
-# Alternative: Replicate (for Stable Diffusion, Flux, etc.)
+# Alternative: Replicate (for Flux, Stable Diffusion, etc.)
 replicate>=0.20.0
 
 # Image processing

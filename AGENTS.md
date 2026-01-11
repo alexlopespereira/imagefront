@@ -88,7 +88,6 @@ Agent: [Executa script Python de geração de imagem]
 - **Script:** `.imagefront/scripts/generate-ui-image.py`
 - **Modelos suportados:**
   - **Google Imagen 3** (Nano Banana) - **Default, recomendado**
-  - DALL-E 3 (OpenAI) - Alternativa
   - Flux Schnell (Replicate) - Alternativa rápida
   - Stable Diffusion XL (Replicate) - Alternativa
 
@@ -116,7 +115,7 @@ python .imagefront/scripts/generate-ui-image.py \
 - `screen-id` - ID da tela (ex: login-screen, dashboard)
 - `prompt` - Descrição da UI a ser gerada
 - `--style` - Estilo de UI (shadcn/ui, material, fluent, etc.)
-- `--model` - Modelo de geração (imagen, dall-e-3, flux, stable-diffusion)
+- `--model` - Modelo de geração (imagen, flux, stable-diffusion)
 - `--size` - Dimensões da imagem (default: 1792x1024)
 
 **Nota:** O modelo padrão é `imagen` (Google Imagen 3). Para usar outro modelo, especifique com `--model`.
@@ -136,7 +135,7 @@ Antes da primeira execução, o usuário deve ter configurado:
 1. Instalado dependências: `pip install -r requirements.txt`
 2. Criado arquivo `.env` com `GOOGLE_API_KEY`
    - Obter key em: https://aistudio.google.com/apikey
-   - Alternativa: usar `OPENAI_API_KEY` com `--model dall-e-3`
+   - Alternativa: usar `REPLICATE_API_TOKEN` com `--model flux` ou `--model stable-diffusion`
 
 #### Exemplo completo de interação:
 
@@ -569,7 +568,7 @@ Would you like me to:
 
 | Capability | Phase | Required Tools | Schemas Used |
 |-----------|-------|----------------|--------------|
-| Generate UI | 1 | Google Imagen (Nano Banana) / DALL-E / Flux | - |
+| Generate UI | 1 | Google Imagen (Nano Banana) / Flux / Stable Diffusion | - |
 | Annotate UI | 2 | GPT-4V/Claude Vision | annotation.schema.json |
 | Create Manifest | 3 | LLM reasoning | component-manifest.schema.json |
 | Approve UI | 4 | File I/O | approval.schema.json |

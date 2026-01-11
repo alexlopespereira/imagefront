@@ -13,15 +13,15 @@ python .imagefront/scripts/generate-ui-image.py <screen-id> "<description>"
 
 ### Alternatives
 
-**DALL-E 3 (OpenAI):**
-```bash
-python .imagefront/scripts/generate-ui-image.py <screen-id> "<description>" --model dall-e-3
-```
-Requires: `OPENAI_API_KEY` in `.env`
-
-**Flux (Replicate):**
+**Flux (Replicate - Fast):**
 ```bash
 python .imagefront/scripts/generate-ui-image.py <screen-id> "<description>" --model flux
+```
+Requires: `REPLICATE_API_TOKEN` in `.env`
+
+**Stable Diffusion (Replicate):**
+```bash
+python .imagefront/scripts/generate-ui-image.py <screen-id> "<description>" --model stable-diffusion
 ```
 Requires: `REPLICATE_API_TOKEN` in `.env`
 
@@ -38,7 +38,7 @@ python .imagefront/scripts/generate-ui-image.py \
 python .imagefront/scripts/generate-ui-image.py \
   dashboard \
   "Admin dashboard with charts" \
-  --model dall-e-3
+  --model flux
 
 # Different style
 python .imagefront/scripts/generate-ui-image.py \
@@ -57,7 +57,7 @@ python .imagefront/scripts/generate-ui-image.py \
 ## Script Parameters
 - `screen-id` - Screen identifier (kebab-case)
 - `prompt` - Description of UI to generate
-- `--model` - Model: `imagen`, `dall-e-3`, `flux`, `stable-diffusion`
+- `--model` - Model: `imagen`, `flux`, `stable-diffusion`
 - `--style` - UI style reference
 - `--size` - Image dimensions (default: 1792x1024)
 - `--output-dir` - Output directory (default: ui_specs)

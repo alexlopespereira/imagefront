@@ -60,10 +60,9 @@ pip install -r requirements.txt
 
 This installs:
 - `google-generativeai` - For Google Imagen 3 (Nano Banana) image generation - **PRIMARY**
-- `openai` - For DALL-E 3 image generation and GPT-4V annotation (alternative)
+- `replicate` - For Flux and Stable Diffusion models (alternative)
 - `python-dotenv` - For environment variable management
 - `requests`, `Pillow` - For image processing
-- `replicate` (optional) - For Stable Diffusion/Flux models
 
 ### 2. Configure API Keys
 
@@ -85,11 +84,11 @@ GOOGLE_API_KEY=your-actual-google-api-key-here
 2. Create a new API key
 3. Copy and paste into `.env` file
 
-**Alternative - OpenAI API Key:**
-1. Go to https://platform.openai.com/api-keys
-2. Create a new API key
-3. Add to `.env` file: `OPENAI_API_KEY=sk-your-key`
-4. Use `--model dall-e-3` when running the script
+**Alternative - Replicate API Token:**
+1. Go to https://replicate.com/account/api-tokens
+2. Create a new API token
+3. Add to `.env` file: `REPLICATE_API_TOKEN=your-token`
+4. Use `--model flux` or `--model stable-diffusion` when running the script
 
 **Important:** Never commit `.env` to git (it's already in `.gitignore`)
 
@@ -160,20 +159,7 @@ your-project/
 
 ## Alternative Image Generation Models
 
-### Using OpenAI DALL-E 3
-
-```bash
-# Add to .env
-OPENAI_API_KEY=sk-your-openai-key
-
-# Generate with DALL-E 3
-python .imagefront/scripts/generate-ui-image.py \
-  dashboard \
-  "Admin dashboard with charts" \
-  --model dall-e-3
-```
-
-### Using Replicate (Stable Diffusion/Flux)
+### Using Replicate (Flux/Stable Diffusion)
 
 ```bash
 # Install Replicate
