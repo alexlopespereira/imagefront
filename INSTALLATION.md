@@ -9,7 +9,7 @@ Complete guide for installing and configuring the Imagefront framework.
 - **Bash** (Linux/macOS) or **PowerShell** (Windows)
 - **Python 3.8+** (for image generation scripts)
 - **Git** (optional, for version control)
-- **OpenAI API Key** (for DALL-E 3 image generation)
+- **Google API Key** (for Imagen/Nano Banana image generation - recommended)
 
 ---
 
@@ -59,7 +59,8 @@ pip install -r requirements.txt
 ```
 
 This installs:
-- `openai` - For DALL-E 3 image generation and GPT-4V annotation
+- `google-generativeai` - For Google Imagen 3 (Nano Banana) image generation - **PRIMARY**
+- `openai` - For DALL-E 3 image generation and GPT-4V annotation (alternative)
 - `python-dotenv` - For environment variable management
 - `requests`, `Pillow` - For image processing
 - `replicate` (optional) - For Stable Diffusion/Flux models
@@ -76,13 +77,19 @@ nano .env  # or your preferred editor
 
 Add your API key:
 ```env
-OPENAI_API_KEY=sk-your-actual-key-here
+GOOGLE_API_KEY=your-actual-google-api-key-here
 ```
 
-**Getting an OpenAI API Key:**
-1. Go to https://platform.openai.com/api-keys
+**Getting a Google API Key (Recommended):**
+1. Go to https://aistudio.google.com/apikey
 2. Create a new API key
 3. Copy and paste into `.env` file
+
+**Alternative - OpenAI API Key:**
+1. Go to https://platform.openai.com/api-keys
+2. Create a new API key
+3. Add to `.env` file: `OPENAI_API_KEY=sk-your-key`
+4. Use `--model dall-e-3` when running the script
 
 **Important:** Never commit `.env` to git (it's already in `.gitignore`)
 
@@ -109,7 +116,7 @@ python .imagefront/scripts/generate-ui-image.py \
 ```
 
 This will:
-- Generate a UI image using DALL-E 3
+- Generate a UI image using Google Imagen 3 (Nano Banana)
 - Save to `ui_specs/login-screen/versions/YYYY-MM-DD-v1.png`
 - Create metadata file `ui_specs/login-screen/metadata.json`
 
@@ -153,6 +160,19 @@ your-project/
 
 ## Alternative Image Generation Models
 
+### Using OpenAI DALL-E 3
+
+```bash
+# Add to .env
+OPENAI_API_KEY=sk-your-openai-key
+
+# Generate with DALL-E 3
+python .imagefront/scripts/generate-ui-image.py \
+  dashboard \
+  "Admin dashboard with charts" \
+  --model dall-e-3
+```
+
 ### Using Replicate (Stable Diffusion/Flux)
 
 ```bash
@@ -169,18 +189,6 @@ python .imagefront/scripts/generate-ui-image.py \
   --model flux
 ```
 
-### Using Stability AI
-
-```bash
-# Add to .env
-STABILITY_API_KEY=your-stability-key
-
-# Generate with Stable Diffusion
-python .imagefront/scripts/generate-ui-image.py \
-  profile \
-  "User profile page" \
-  --model stable-diffusion
-```
 
 ---
 

@@ -87,7 +87,8 @@ Agent: [Executa script Python de geração de imagem]
 #### Ferramenta utilizada:
 - **Script:** `.imagefront/scripts/generate-ui-image.py`
 - **Modelos suportados:**
-  - DALL-E 3 (OpenAI) - Default, recomendado
+  - **Google Imagen 3** (Nano Banana) - **Default, recomendado**
+  - DALL-E 3 (OpenAI) - Alternativa
   - Flux Schnell (Replicate) - Alternativa rápida
   - Stable Diffusion XL (Replicate) - Alternativa
 
@@ -115,8 +116,10 @@ python .imagefront/scripts/generate-ui-image.py \
 - `screen-id` - ID da tela (ex: login-screen, dashboard)
 - `prompt` - Descrição da UI a ser gerada
 - `--style` - Estilo de UI (shadcn/ui, material, fluent, etc.)
-- `--model` - Modelo de geração (dall-e-3, flux, stable-diffusion)
+- `--model` - Modelo de geração (imagen, dall-e-3, flux, stable-diffusion)
 - `--size` - Dimensões da imagem (default: 1792x1024)
+
+**Nota:** O modelo padrão é `imagen` (Google Imagen 3). Para usar outro modelo, especifique com `--model`.
 
 #### Outputs gerados:
 - `ui_specs/<screen-id>/versions/YYYY-MM-DD-vN.png`
@@ -131,14 +134,16 @@ python .imagefront/scripts/generate-ui-image.py \
 #### Configuração necessária:
 Antes da primeira execução, o usuário deve ter configurado:
 1. Instalado dependências: `pip install -r requirements.txt`
-2. Criado arquivo `.env` com `OPENAI_API_KEY`
+2. Criado arquivo `.env` com `GOOGLE_API_KEY`
+   - Obter key em: https://aistudio.google.com/apikey
+   - Alternativa: usar `OPENAI_API_KEY` com `--model dall-e-3`
 
 #### Exemplo completo de interação:
 
 ```
 User: "Crie uma tela de dashboard administrativa"
 
-Agent: Vou gerar a UI usando DALL-E 3.
+Agent: Vou gerar a UI usando Google Imagen 3.
        [Executa via Bash tool]
        python .imagefront/scripts/generate-ui-image.py \
          admin-dashboard \
@@ -146,19 +151,19 @@ Agent: Vou gerar a UI usando DALL-E 3.
          --style shadcn/ui
 
        [Output do script:]
-       🎨 Generating UI mockup for 'admin-dashboard'...
-          Model: dall-e-3
-          Style: shadcn/ui
-          Size: 1792x1024
+       [*] Generating UI mockup for 'admin-dashboard'...
+           Model: imagen
+           Style: shadcn/ui
+           Size: 1792x1024
 
-       ⏳ Calling DALL-E 3 API...
-       ⏳ Downloading image...
+       [...] Calling Google Imagen API...
+       [...] Saving image...
 
-       ✅ UI mockup generated successfully!
-          📁 Image: ui_specs/admin-dashboard/versions/2026-01-11-v1.png
+       [OK] UI mockup generated successfully!
+            Image: ui_specs/admin-dashboard/versions/2026-01-11-v1.png
 
        Next steps:
-       1. Review the image
+       1. Review the image: ui_specs/admin-dashboard/versions/2026-01-11-v1.png
        2. Annotate elements: python scripts/annotate-ui.py admin-dashboard v1
        3. Create manifest: python scripts/create-manifest.py admin-dashboard v1
 
@@ -564,7 +569,7 @@ Would you like me to:
 
 | Capability | Phase | Required Tools | Schemas Used |
 |-----------|-------|----------------|--------------|
-| Generate UI | 1 | DALL-E/Midjourney | - |
+| Generate UI | 1 | Google Imagen (Nano Banana) / DALL-E / Flux | - |
 | Annotate UI | 2 | GPT-4V/Claude Vision | annotation.schema.json |
 | Create Manifest | 3 | LLM reasoning | component-manifest.schema.json |
 | Approve UI | 4 | File I/O | approval.schema.json |

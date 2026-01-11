@@ -17,8 +17,8 @@ def main():
     parser.add_argument('screen_id', help='Screen ID (e.g., login-screen)')
     parser.add_argument('prompt', help='Description of the UI to generate')
     parser.add_argument('--style', default='shadcn/ui', help='UI style reference (default: shadcn/ui)')
-    parser.add_argument('--model', choices=['dall-e-3', 'stable-diffusion', 'flux'],
-                       default='dall-e-3', help='Image generation model')
+    parser.add_argument('--model', choices=['imagen', 'dall-e-3', 'stable-diffusion', 'flux'],
+                       default='imagen', help='Image generation model (default: imagen - Google Imagen/Nano Banana)')
     parser.add_argument('--size', default='1792x1024', help='Image size (default: 1792x1024)')
     parser.add_argument('--output-dir', default='ui_specs', help='Output directory')
 
@@ -28,10 +28,17 @@ def main():
     load_dotenv()
 
     # Check for API key
-    if args.model == 'dall-e-3':
+    if args.model == 'imagen':
+        api_key = os.getenv('GOOGLE_API_KEY')
+        if not api_key:
+            print("[ERROR] GOOGLE_API_KEY not found in .env file")
+            print("Please create a .env file with your Google API key")
+            print("Get your key at: https://aistudio.google.com/apikey")
+            sys.exit(1)
+    elif args.model == 'dall-e-3':
         api_key = os.getenv('OPENAI_API_KEY')
         if not api_key:
-            print("❌ Error: OPENAI_API_KEY not found in .env file")
+            print("[ERROR] OPENAI_API_KEY not found in .env file")
             print("Please create a .env file with your OpenAI API key")
             sys.exit(1)
 
@@ -53,15 +60,17 @@ def main():
     # Build enhanced prompt for UI generation
     enhanced_prompt = build_ui_prompt(args.prompt, args.style)
 
-    print(f"🎨 Generating UI mockup for '{args.screen_id}'...")
-    print(f"   Model: {args.model}")
-    print(f"   Style: {args.style}")
-    print(f"   Size: {args.size}")
-    print(f"   Output: {output_path}")
+    print(f"[*] Generating UI mockup for '{args.screen_id}'...")
+    print(f"    Model: {args.model}")
+    print(f"    Style: {args.style}")
+    print(f"    Size: {args.size}")
+    print(f"    Output: {output_path}")
     print()
 
     # Generate image based on model
-    if args.model == 'dall-e-3':
+    if args.model == 'imagen':
+        success = generate_with_imagen(enhanced_prompt, output_path, args.size)
+    elif args.model == 'dall-e-3':
         success = generate_with_dalle(enhanced_prompt, output_path, args.size)
     elif args.model == 'stable-diffusion':
         success = generate_with_replicate(enhanced_prompt, output_path, 'stability-ai/sdxl')
@@ -73,15 +82,15 @@ def main():
         update_metadata(screen_dir, version, filename, args.prompt, enhanced_prompt)
 
         print()
-        print("✅ UI mockup generated successfully!")
-        print(f"   📁 Image: {output_path}")
+        print("[OK] UI mockup generated successfully!")
+        print(f"     Image: {output_path}")
         print()
         print("Next steps:")
         print(f"1. Review the image: {output_path}")
         print(f"2. Annotate elements: python scripts/annotate-ui.py {args.screen_id} {version}")
         print(f"3. Create manifest: python scripts/create-manifest.py {args.screen_id} {version}")
     else:
-        print("❌ Failed to generate image")
+        print("[ERROR] Failed to generate image")
         sys.exit(1)
 
 def build_ui_prompt(user_prompt, style):
@@ -118,6 +127,47 @@ The image should look like a polished product screenshot, not a wireframe."""
 
     return prompt
 
+def generate_with_imagen(prompt, output_path, size='1792x1024'):
+    """Generate image using Google Imagen (Nano Banana)"""
+    try:
+        import google.generativeai as genai
+
+        api_key = os.getenv('GOOGLE_API_KEY')
+        genai.configure(api_key=api_key)
+
+        print("[...] Calling Google Imagen API...")
+
+        # Parse size
+        width, height = map(int, size.split('x'))
+
+        # Use Imagen 3 model
+        model = genai.ImageGenerationModel("imagen-3.0-generate-001")
+
+        result = model.generate_images(
+            prompt=prompt,
+            number_of_images=1,
+            aspect_ratio="16:9" if width > height else "9:16",
+            safety_filter_level="block_few",
+            person_generation="allow_adult"
+        )
+
+        # Save the image
+        print("[...] Saving image...")
+        if result.images:
+            result.images[0].save(str(output_path))
+            return True
+        else:
+            print("[ERROR] No image generated")
+            return False
+
+    except ImportError:
+        print("[ERROR] google-generativeai package not installed")
+        print("Install with: pip install google-generativeai")
+        return False
+    except Exception as e:
+        print(f"[ERROR] {e}")
+        return False
+
 def generate_with_dalle(prompt, output_path, size='1792x1024'):
     """Generate image using DALL-E 3"""
     try:
@@ -125,7 +175,7 @@ def generate_with_dalle(prompt, output_path, size='1792x1024'):
 
         client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-        print("⏳ Calling DALL-E 3 API...")
+        print("[...] Calling DALL-E 3 API...")
 
         response = client.images.generate(
             model="dall-e-3",
@@ -139,7 +189,7 @@ def generate_with_dalle(prompt, output_path, size='1792x1024'):
 
         # Download image
         import requests
-        print("⏳ Downloading image...")
+        print("[...] Downloading image...")
         img_data = requests.get(image_url).content
 
         with open(output_path, 'wb') as f:
@@ -148,11 +198,11 @@ def generate_with_dalle(prompt, output_path, size='1792x1024'):
         return True
 
     except ImportError:
-        print("❌ Error: openai package not installed")
+        print("[ERROR] openai package not installed")
         print("Install with: pip install openai")
         return False
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"[ERROR] {e}")
         return False
 
 def generate_with_replicate(prompt, output_path, model):
@@ -160,7 +210,7 @@ def generate_with_replicate(prompt, output_path, model):
     try:
         import replicate
 
-        print(f"⏳ Calling Replicate API ({model})...")
+        print(f"[...] Calling Replicate API ({model})...")
 
         output = replicate.run(
             model,
@@ -177,11 +227,11 @@ def generate_with_replicate(prompt, output_path, model):
         return True
 
     except ImportError:
-        print("❌ Error: replicate package not installed")
+        print("[ERROR] replicate package not installed")
         print("Install with: pip install replicate")
         return False
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"[ERROR] {e}")
         return False
 
 def update_metadata(screen_dir, version, filename, user_prompt, enhanced_prompt):

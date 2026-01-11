@@ -77,7 +77,8 @@ pip install -r requirements.txt
 
 # 2. Configure API keys
 cp .env.template .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add your GOOGLE_API_KEY
+# Get key at: https://aistudio.google.com/apikey
 
 # 3. Generate your first UI
 python .imagefront/scripts/generate-ui-image.py login-screen "A modern login screen"
