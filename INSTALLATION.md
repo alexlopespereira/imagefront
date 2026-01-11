@@ -1,12 +1,12 @@
 # Imagefront Installation Guide
 
-Similar to GitHub Spec-Kit, Imagefront can be installed in your project using simple commands.
+Imagefront can be installed in your project using simple commands.
 
 ---
 
 ## Quick Install (Recommended)
 
-### Option 1: Using `uvx` (Python - like Spec-Kit)
+### Option 1: Using `uvx` 
 
 ```bash
 # Install in a new project directory
@@ -241,21 +241,6 @@ Generates `backend_specs/contracts.draft.md`.
 
 ---
 
-## Comparison with Spec-Kit
-
-| Feature | Spec-Kit | Imagefront |
-|---------|----------|------------|
-| **Installation** | `uvx specify init` | `uvx imagefront init` |
-| **Focus** | Spec-driven dev (any domain) | UI-first development |
-| **AI Integration** | Agent-agnostic | Optimized for Claude Code + vision models |
-| **Artifacts** | Specs, plans, tasks | UI images, annotations, manifests, contracts |
-| **Validation** | Constitution-based | Schema-based (JSON Schema) |
-| **Gate** | None built-in | UI Freeze Gate (mandatory) |
-| **Output** | Markdown specs | Images + JSON + Markdown |
-| **Backend** | Not specifically addressed | Contracts + scaffolding |
-
----
-
 ## Requirements
 
 ### For Python Installation (uvx)
@@ -356,9 +341,3 @@ echo $OPENAI_API_KEY
 
 ---
 
-## Sources
-
-This installation system was inspired by:
-- [GitHub Spec-Kit](https://github.com/github/spec-kit)
-- [Spec-Kit Documentation](https://blog.logrocket.com/github-spec-kit/)
-- [Spec-Driven Development Blog Post](https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/)

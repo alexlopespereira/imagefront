@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(env)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(/c/Users/alex/AppData/Local/Programs/Antigravity/bin/antigravity:*)",
+      "Bash(python3:*)",
+      "Bash(antigravity --help:*)",
+      "Bash(antigravity chat --help:*)",
+      "Bash(antigravity chat:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
