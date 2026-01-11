@@ -20,27 +20,49 @@ Este repositório contém a **especificação completa do framework Imagefront**
 
 ### Install with One Command
 
+**Linux/macOS (Bash):**
 ```bash
 # Install in current directory (default: React + shadcn/ui)
 curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash
+```
 
-# Or download and run with options
-curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh --framework react --style "shadcn/ui" --backend agnostic
+**Windows (PowerShell):**
+```powershell
+# Install in current directory (default: React + shadcn/ui)
+iwr -useb https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 | iex
 ```
 
 ### Customize Installation
 
+**Bash (Linux/macOS/Git Bash):**
 ```bash
+# Download and run with options
+curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh -o install.sh
+chmod +x install.sh
+
 # With Vue + Material Design
-curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --framework vue --style material
+./install.sh --framework vue --style material
 
 # With .NET backend
-curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --framework react --backend dotnet
+./install.sh --framework react --backend dotnet
 
 # In a specific directory
-curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- --dir my-app
+./install.sh --dir my-app --framework react
+```
+
+**PowerShell (Windows):**
+```powershell
+# Download script
+iwr https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 -OutFile install.ps1
+
+# With Vue + Material Design
+.\install.ps1 -Framework vue -Style material
+
+# With .NET backend
+.\install.ps1 -Framework react -Backend dotnet
+
+# In a specific directory
+.\install.ps1 -TargetDir my-app -Framework react
 ```
 
 📖 See **[INSTALLATION.md](INSTALLATION.md)** for complete installation guide.

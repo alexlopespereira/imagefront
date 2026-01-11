@@ -11,41 +11,47 @@ git push origin main
 
 ## Test in voiceapp Project
 
-### Option 1: Direct Install (Recommended for Testing)
+### Option 1: PowerShell (Recommended for Windows)
+
+```powershell
+cd C:\Projects\prototype_realtime_voice\voiceapp
+
+# Direct install (one-liner)
+iwr -useb https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 | iex
+
+# OR with custom settings
+iwr https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 -OutFile install.ps1
+.\install.ps1 -Framework react -Style "shadcn/ui" -Backend python
+```
+
+### Option 2: Git Bash (Alternative for Windows)
 
 ```bash
-cd C:\Projects\prototype_realtime_voice\voiceapp
+cd /c/Projects/prototype_realtime_voice/voiceapp
 
 # Install Imagefront framework
 curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash
-```
 
-### Option 2: With Custom Options
-
-```bash
-cd C:\Projects\prototype_realtime_voice\voiceapp
-
-# Install with custom settings
+# OR with custom settings
 curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh | bash -s -- \
   --framework react \
   --style "shadcn/ui" \
   --backend python
 ```
 
-### Option 3: Download and Inspect First
+### Option 3: Download and Inspect First (PowerShell)
 
-```bash
+```powershell
 cd C:\Projects\prototype_realtime_voice\voiceapp
 
 # Download the script
-curl -fsSL https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.sh -o install.sh
+iwr https://raw.githubusercontent.com/alexlopespereira/imagefront/main/install.ps1 -OutFile install.ps1
 
 # Inspect it (optional)
-cat install.sh
+Get-Content install.ps1
 
 # Run it
-chmod +x install.sh
-./install.sh --framework react --style "shadcn/ui" --backend python
+.\install.ps1 -Framework react -Style "shadcn/ui" -Backend python
 ```
 
 ## What Should Happen
@@ -85,6 +91,22 @@ After installation, you should see:
 
 ## Verify Installation
 
+**PowerShell:**
+```powershell
+# Check directory structure
+Get-ChildItem .imagefront -Force
+
+# Check config
+Get-Content .imagefront\config.json
+
+# Read the guide
+Get-Content IMAGEFRONT.md
+
+# Try helper script
+.\.imagefront\scripts\new-screen.ps1 test-screen
+```
+
+**Bash:**
 ```bash
 # Check directory structure
 ls -la .imagefront/
@@ -118,6 +140,12 @@ cat IMAGEFRONT.md
 
 If you want to remove the installation and test again:
 
+**PowerShell:**
+```powershell
+Remove-Item -Recurse -Force .imagefront, ui_specs, ux_specs, ui_approvals, ux_approvals, backend_specs, IMAGEFRONT.md
+```
+
+**Bash:**
 ```bash
 rm -rf .imagefront/ ui_specs/ ux_specs/ ui_approvals/ ux_approvals/ backend_specs/ IMAGEFRONT.md
 ```
