@@ -115,6 +115,14 @@ foreach ($schema in $schemas) {
     Get-FileIfExists -Url $url -Output $output
 }
 
+# Download documentation
+$docs = @("AGENTS.md", "UI_ONLY_ITERATIONS.md", "FRAMEWORK_SPEC.md")
+foreach ($doc in $docs) {
+    $url = "$RAW_URL/$doc"
+    $output = Join-Path $TargetDir ".imagefront\$doc"
+    Get-FileIfExists -Url $url -Output $output
+}
+
 # Create placeholder if download failed
 $annotationSchema = Join-Path $TargetDir ".imagefront\schemas\annotation.schema.json"
 if (-not (Test-Path $annotationSchema)) {
@@ -154,8 +162,12 @@ $readme += "1. Generate a login screen in $Style style`n"
 $readme += "2. Annotate all elements`n"
 $readme += "3. Create component manifest`n"
 $readme += "4. Approve for implementation`n`n"
-$readme += "## Documentation`n`n"
-$readme += "https://github.com/alexlopespereira/imagefront`n"
+$readme += "## Framework Documentation`n`n"
+$readme += "Key files installed in .imagefront/:`n"
+$readme += "- AGENTS.md - How AI agents work with this framework`n"
+$readme += "- UI_ONLY_ITERATIONS.md - UI-first development workflow`n"
+$readme += "- FRAMEWORK_SPEC.md - Complete framework specification`n`n"
+$readme += "Online: https://github.com/alexlopespereira/imagefront`n"
 
 $readmePath = Join-Path $TargetDir "IMAGEFRONT.md"
 $readme | Set-Content $readmePath -Encoding UTF8

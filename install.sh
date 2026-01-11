@@ -118,12 +118,18 @@ download_if_exists() {
   curl -fsSL "$url" -o "$output" 2>/dev/null || true
 }
 
+# Download schemas
 download_if_exists "$RAW_URL/schemas/annotation.schema.json" "$TARGET_DIR/.imagefront/schemas/annotation.schema.json"
 download_if_exists "$RAW_URL/schemas/component-manifest.schema.json" "$TARGET_DIR/.imagefront/schemas/component-manifest.schema.json"
 download_if_exists "$RAW_URL/schemas/approval.schema.json" "$TARGET_DIR/.imagefront/schemas/approval.schema.json"
 download_if_exists "$RAW_URL/schemas/contract.schema.json" "$TARGET_DIR/.imagefront/schemas/contract.schema.json"
 download_if_exists "$RAW_URL/schemas/trace.schema.json" "$TARGET_DIR/.imagefront/schemas/trace.schema.json"
 download_if_exists "$RAW_URL/schemas/assertion.schema.json" "$TARGET_DIR/.imagefront/schemas/assertion.schema.json"
+
+# Download documentation
+download_if_exists "$RAW_URL/AGENTS.md" "$TARGET_DIR/.imagefront/AGENTS.md"
+download_if_exists "$RAW_URL/UI_ONLY_ITERATIONS.md" "$TARGET_DIR/.imagefront/UI_ONLY_ITERATIONS.md"
+download_if_exists "$RAW_URL/FRAMEWORK_SPEC.md" "$TARGET_DIR/.imagefront/FRAMEWORK_SPEC.md"
 
 # Create placeholder schemas if downloads failed (repo not pushed yet)
 if [ ! -f "$TARGET_DIR/.imagefront/schemas/annotation.schema.json" ]; then
@@ -325,11 +331,14 @@ backend_specs/      # Backend contracts and scaffolds
 .imagefront/        # Framework configuration
 \`\`\`
 
-## Documentation
+## Framework Documentation
 
-- [Framework Spec](https://github.com/alexlopespereira/imagefront/blob/main/FRAMEWORK_SPEC.md)
-- [AI Agent Guide](https://github.com/alexlopespereira/imagefront/blob/main/AGENTS.md)
-- [UI-Only Iterations](https://github.com/alexlopespereira/imagefront/blob/main/UI_ONLY_ITERATIONS.md)
+Key files installed in .imagefront/:
+- **AGENTS.md** - How AI agents work with this framework
+- **UI_ONLY_ITERATIONS.md** - UI-first development workflow
+- **FRAMEWORK_SPEC.md** - Complete framework specification
+
+Online documentation: https://github.com/alexlopespereira/imagefront
 
 ## Configuration
 
