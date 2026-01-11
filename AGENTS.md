@@ -77,22 +77,99 @@ Antes de iniciar implementação de backend, o time **DEVERIA** estabelecer um U
 #### Comandos típicos:
 ```
 User: "Gere uma tela de login moderna"
-Agent: [Lê prompts/generate-ui.md]
-       [Gera imagem via DALL-E usando prompt estruturado]
+Agent: [Executa script Python de geração de imagem]
+       [Comando: python .imagefront/scripts/generate-ui-image.py login-screen "A modern login screen"]
+       [Script chama DALL-E 3 API com prompt otimizado]
        [Salva em ui_specs/login-screen/versions/2026-01-10-v1.png]
        [Cria metadata.json inicial]
 ```
 
-#### Template de prompt usado:
-- `prompts/generate-ui.md`
+#### Ferramenta utilizada:
+- **Script:** `.imagefront/scripts/generate-ui-image.py`
+- **Modelos suportados:**
+  - DALL-E 3 (OpenAI) - Default, recomendado
+  - Flux Schnell (Replicate) - Alternativa rápida
+  - Stable Diffusion XL (Replicate) - Alternativa
+
+#### Como o agente deve executar:
+
+**Opção 1: Execução direta via Bash tool**
+```python
+python .imagefront/scripts/generate-ui-image.py \
+  <screen-id> \
+  "<descrição-da-UI>" \
+  --style shadcn/ui \
+  --size 1792x1024
+```
+
+**Opção 2: Com modelo alternativo**
+```python
+python .imagefront/scripts/generate-ui-image.py \
+  dashboard \
+  "Admin dashboard with charts and tables" \
+  --model flux \
+  --style material
+```
+
+#### Parâmetros do script:
+- `screen-id` - ID da tela (ex: login-screen, dashboard)
+- `prompt` - Descrição da UI a ser gerada
+- `--style` - Estilo de UI (shadcn/ui, material, fluent, etc.)
+- `--model` - Modelo de geração (dall-e-3, flux, stable-diffusion)
+- `--size` - Dimensões da imagem (default: 1792x1024)
 
 #### Outputs gerados:
 - `ui_specs/<screen-id>/versions/YYYY-MM-DD-vN.png`
-- `ui_specs/<screen-id>/metadata.json`
+- `ui_specs/<screen-id>/metadata.json` (atualizado automaticamente)
 
 #### Validações:
 - ✓ Imagem salva com naming convention correto
 - ✓ Metadata contém screen-id, version, createdAt, prompt usado
+- ✓ Versionamento automático (v1, v2, v3...)
+- ✓ API key configurada em `.env`
+
+#### Configuração necessária:
+Antes da primeira execução, o usuário deve ter configurado:
+1. Instalado dependências: `pip install -r requirements.txt`
+2. Criado arquivo `.env` com `OPENAI_API_KEY`
+
+#### Exemplo completo de interação:
+
+```
+User: "Crie uma tela de dashboard administrativa"
+
+Agent: Vou gerar a UI usando DALL-E 3.
+       [Executa via Bash tool]
+       python .imagefront/scripts/generate-ui-image.py \
+         admin-dashboard \
+         "Administrative dashboard with user table, statistics cards, and charts" \
+         --style shadcn/ui
+
+       [Output do script:]
+       🎨 Generating UI mockup for 'admin-dashboard'...
+          Model: dall-e-3
+          Style: shadcn/ui
+          Size: 1792x1024
+
+       ⏳ Calling DALL-E 3 API...
+       ⏳ Downloading image...
+
+       ✅ UI mockup generated successfully!
+          📁 Image: ui_specs/admin-dashboard/versions/2026-01-11-v1.png
+
+       Next steps:
+       1. Review the image
+       2. Annotate elements: python scripts/annotate-ui.py admin-dashboard v1
+       3. Create manifest: python scripts/create-manifest.py admin-dashboard v1
+
+Agent: ✅ Dashboard UI gerada com sucesso!
+       → ui_specs/admin-dashboard/versions/2026-01-11-v1.png
+
+       Próximos passos:
+       1. Revisar a imagem gerada
+       2. Anotar elementos: "Anote todos os elementos desta tela"
+       3. Criar manifest: "Crie o manifest de componentes"
+```
 
 ---
 
